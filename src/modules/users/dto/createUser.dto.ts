@@ -6,41 +6,9 @@ import {
   IsString,
   IsStrongPassword,
   Length,
-  registerDecorator,
-  Validate,
   ValidateIf,
-  ValidationOptions,
 } from 'class-validator';
-import {
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-  ValidationArguments,
-} from 'class-validator';
-
-@ValidatorConstraint({ name: 'customText', async: false })
-export class matchKey implements ValidatorConstraintInterface {
-  validate(value: string, args: ValidationArguments) {
-    return args.value === args.object[args.constraints[0]];
-  }
-  defaultMessage(args: ValidationArguments) {
-    return `${args.value} not match with ${args.constraints[0]}`;
-  }
-}
-
-export function IsMatch(
-  constraints: string[],
-  validationOptions?: ValidationOptions,
-) {
-  return function (object: Object, propertyName: string) {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints,
-      validator: matchKey,
-    });
-  };
-}
+import { IsMatch } from 'src/common/decorator/user.decorator';
 
 export class CreateUserDto {
   @Length(3, 15, { message: 'Name must be greater than 3 and less than 15' })

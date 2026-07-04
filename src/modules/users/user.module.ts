@@ -12,7 +12,6 @@ import UserRepository from 'src/DB/repository/user.repository';
 import RedisService from 'src/common/service/redis.service';
 import TokenService from 'src/common/service/token.service';
 import { RedisModule } from 'src/common/redis/redis.module';
-import { Auth } from 'src/common/middleware/authentication.middleware';
 
 @Module({
   imports: [UserModel, RedisModule],
@@ -26,8 +25,5 @@ import { Auth } from 'src/common/middleware/authentication.middleware';
   ],
   exports: [],
 })
-export class UserModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(Auth).forRoutes(UserController);
-  }
+export class UserModule  {
 }

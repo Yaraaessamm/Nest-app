@@ -44,7 +44,7 @@ class TokenService {
       ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY_ADMIN!;
       REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY_ADMIN!;
     } else throw new UnauthorizedException('Unauthorized: invalid token type');
-    
+
     return { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY };
   };
 
@@ -56,6 +56,8 @@ class TokenService {
     const user = await this.userRepo.findOne({ filter: { _id: decoded.id } });
     if (!user) throw new UnauthorizedException('User not found');
 
+    
+    
     return { user, decoded };
   };
 }

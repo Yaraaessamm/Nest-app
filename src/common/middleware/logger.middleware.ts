@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import TokenService from '../service/token.service';
 
 @Injectable()
-export class Auth implements NestMiddleware {
+export class logger implements NestMiddleware {
   constructor(private readonly tokenService: TokenService) {}
 
   use(req: Request, res: Response, next: NextFunction) {

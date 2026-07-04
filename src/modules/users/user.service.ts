@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
   Injectable,
 } from '@nestjs/common';
 import UserRepository from 'src/DB/repository/user.repository';
@@ -15,6 +16,7 @@ import { eventEmitter } from 'src/common/utils/email/email.events';
 import { randomUUID } from 'crypto';
 import { RoleEnum } from 'src/common/enum/user.enum';
 import TokenService from 'src/common/service/token.service';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -69,7 +71,7 @@ export class UserService {
     const user = await this.userRepo.create({
       userName,
       email,
-      password: Hash({ plainText: password }),
+      password,
       phone: encrypt(phone),
       age,
     });
@@ -81,9 +83,8 @@ export class UserService {
     const { email, password } = body;
     const userExist = await this.userRepo.findOne({ filter: { email } });
     if (!userExist) throw new BadRequestException('User not exists');
-
     if (!Compare({ plainText: password, cipherText: userExist.password }))
-      throw new Error('Invalid password');
+      throw new HttpException({ message: 'Invalid password' }, 400);
     // Generate Token ----------->
     const jwtid = randomUUID();
     const access_token = await this.tokenService.GenerateToken({
@@ -109,5 +110,13 @@ export class UserService {
       },
     });
     return { access_token, refresh_token };
+  }
+
+  async getUsers(req:any) {
+    return req.user
+  }
+
+  async getProfile(req:any) {
+    return req.user
   }
 }
